@@ -48,6 +48,7 @@ L'option --legacy-watch (ou -L) force Nodemon à vérifier périodiquement les f
 -v "chemin:/app" partage le projet avec le conteneur en autorisant les modifications.
 -v /app/node_modules préserve les dépendances installées dans le conteneur.
 -v /app/dist préserve les fichiers compilés dans le conteneur.
+
 On sépare les volumes pour appliquer des règles différentes : protéger les sources avec (:ro), garder les dépendances dans node_modules et permettre à Vite d'écrire les fichiers compilés dans dist.
 
 # docker logs -f signup-app
@@ -108,3 +109,46 @@ Lancer le conteneur en production avec les deux fichiers docker-compose.yml et d
 ✔ Container signup-app           Started  
 
 # dockerignore : docker-compose*
+
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+ ✔ Image signup                   Built                                                                                                                  24.8s
+ ✔ Network template_front_default Created               docker logs signup-cont             
+                                                              0.2s
+> template_front@0.0.0 start      Started                                                   
+> node server.cjs 
+
+# docker logs signup-cont
+> template_front@0.0.0 start
+> node server.cjs
+
+Application disponible sur http://localhost:4000
+
+# docker-compose.prod.yml down
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+ ✔ Image signup          Built                                            4.6s
+ ✔ Container signup-cont Started  
+
+# docker logs signup-cont
+[nodemon] starting `npm run build && node server.cjs server.cjs`
+✓ built in 2.28s
+Application disponible sur http://localhost:4000
+
+# Ajout d'un service mongo dasn docker-compose.yml
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+ ✔ Image signup                     Built                                                         13.4s
+ ✔ Container template_front-mongo-1 Started                                                        4.6s
+ ✔ Container signup-cont            Started 
+
+# npm i mongoose
+Installer mongoose pour ajouter ses dépendences dans node_modules.
+
+# docker logs signup-cont -f
+Application disponible sur http://localhost:4000
+connect to DB

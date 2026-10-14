@@ -2,8 +2,10 @@ version: '3'
 services:
   signup-app:
     image: signup
-    container_name: signup-app
-    build: .
+    container_name: signup-cont
+    build:
+      context: .
+      target: development
     ports:
       - "4000:4000"
     env_file:
