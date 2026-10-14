@@ -1,0 +1,7 @@
+node_modules
+dockerfile
+package-lock.json
+dist
+.git
+.env
+docker-compose*

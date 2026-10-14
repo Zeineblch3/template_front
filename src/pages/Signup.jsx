@@ -19,14 +19,30 @@ function Signup() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData)
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://localhost:3000/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    console.log(data.message);
+    alert(data.message);
+  } catch (error) {
+    console.error("Erreur :", error);
   }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form handleSubmit = {handleSubmit} className="w-full max-w-md bg-white p-8 rounded-xl shadow-md space-y-5">
+      <form onSubmit = {handleSubmit} className="w-full max-w-md bg-white p-8 rounded-xl shadow-md space-y-5">
         <h1 className="text-2xl font-bold text-center text-gray-800">
           Signup
         </h1>
